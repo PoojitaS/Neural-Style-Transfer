@@ -24,7 +24,7 @@ most asthetically pleasing image. In this project, I wrap an optimizer around th
 that finds optimal style weights that minimze the loss. 
 
 ## HOW TO RUN 
-###Pre-requisites
+### Pre-requisites
 This program has been implemented in Python 2.7. The following libraries must be installed on your system to run it:
 * Numpy
 * Scipy
@@ -32,7 +32,7 @@ This program has been implemented in Python 2.7. The following libraries must be
 * h5py
 * Tensorflow
 
-###Execution
+### Execution
 Clone this repository to your preferred directory on your system  (GPU preferred for faster performance)
 Run the following command from your terminal within the directory: 
 <pre> python NST.py path/to/content/image path/to/content/image path/to/style/image(s) path/to/generated/image</pre>
