@@ -35,7 +35,7 @@ This program has been implemented in Python 2.7. The following libraries must be
 ### Execution
 Clone this repository to your preferred directory on your system  (GPU preferred for faster performance)
 Run the following command from your terminal within the directory: 
-<pre> python NST.py path/to/content/image path/to/content/image path/to/style/image(s) path/to/generated/image</pre>
+<pre> python optimize_nst.py path/to/content/image path/to/content/image path/to/style/image(s) path/to/generated/image</pre>
 Example:
 <pre>python optimize_nst.py images/inputs/content/Dipping-Sun.jpg images/inputs/style/the_scream.jpg images/inputs/style/wave_kanagawa.jpg Results/generated</pre>
 
