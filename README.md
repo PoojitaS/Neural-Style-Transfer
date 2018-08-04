@@ -8,7 +8,7 @@ In 2015, Gatys et al. published a paper titled ['A Neural Algorithm of Artistic 
 It proposed an optimization-based method to transfer artistic style from a painting onto a photograph such that the resulting pastiche 
 exhibits a blend of style of the painting and the content of the photograph. 
 
-### How they did it
+#### How they did it
 The main idea is to construct an optimization problem that minimizes loss of information (in the form of style and content) between 
 input images (content image and style image) and generated image (pastiche). A pre-trained (on image dataset) deep convolutional neural network (VGG) 
 is used to backpropogate into the generated image to match feature representations with the input images. This process takes several iterations 
@@ -18,7 +18,7 @@ to produce effective results, and is often very slow.
 Extending from the Neural Style Transfer concept, we can blend multiple styles onto one content image to generate a beautiful pastiche.
 This can be done by assigning style weights to each painting to fix each painting's contribution to the blended style. 
 
-### Optimizing style weights
+#### Optimizing style weights
 Blending styles is often a tedious process involving many trial-and-error rounds for adjusting style weights in order to find the 
 most asthetically pleasing image. In this project, I wrap an optimizer around the Gatys implementation of NST for multi-style transfer 
 that finds optimal style weights that minimze the loss. 
