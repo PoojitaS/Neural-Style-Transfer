@@ -1,7 +1,5 @@
 # STYLE WEIGHT OPTIMIZATION FOR MULTI-STYLE TRANSFER 
 
-Repository for documenting ongoing developments in research dedicated to advancing Neural Style Transfer methods.
-
 ## OVERVIEW
 ### Neural Style Transfer
 In 2015, Gatys et al. published a paper titled ['A Neural Algorithm of Artistic Style'](https://arxiv.org/pdf/1508.06576v2.pdf). 
