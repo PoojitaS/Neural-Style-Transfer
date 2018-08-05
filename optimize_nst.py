@@ -45,7 +45,6 @@ aspect_ratio = 0
 def str_to_bool(v):
     return v.lower() in ("true", "yes", "t", "1", "y")
 
-
 #Commandline arguments
 parser = argparse.ArgumentParser(description='Neural style transfer with Keras.')
 parser.add_argument('base_image_path', metavar='base', type=str,
@@ -599,7 +598,7 @@ def nst(style_weights, content_weight, total_variation_weight, outputs_dict, sha
         print("Starting iteration %d of %d" % ((i + 1), num_iter))
         start_time = time.time()
 
-        x, min_val, info = fmin_l_bfgs_b(evaluator.loss, x.flatten(), fprime=evaluator.grads, maxfun=50)
+        x, min_val, info = fmin_l_bfgs_b(evaluator.loss, x.flatten(), fprime=evaluator.grads, maxfun=20)
 
         if prev_min_val == -1:
             prev_min_val = min_val
@@ -668,8 +667,6 @@ class Evaluator(object):
     def loss(self, x):
         assert self.loss_value is None
         loss_value, grad_values = eval_loss_and_grads(x)
-        # print("in loss(): ")
-        # print(loss_value, grad_values)
         self.loss_value = loss_value
         self.grad_values = grad_values
         return self.loss_value
@@ -680,22 +677,6 @@ class Evaluator(object):
         self.loss_value = None
         self.grad_values = None
         return grad_values
-
-    def wloss(self, style_weights, content_weight, total_variation_weight, outputs_dict, shape_dict, nb_tensors, nb_style_images, combination_image):
-
-        min_val = nst(style_weights, content_weight, total_variation_weight, outputs_dict, shape_dict, nb_tensors, nb_style_images, combination_image)
-        # grad = style_gradient(style_weights)
-        self.w_loss = min_val
-        # self.w_grad = grad
-        return self.w_loss
-
-    # def wgrads(self, style_weights, content_weight, total_variation_weight, outputs_dict, shape_dict, nb_tensors, nb_style_images, combination_image):
-    #     assert self.w_grad is not None
-    #     grad = np.copy(self.w_grad)
-    #     self.w_loss = None
-    #     self.w_grad = None
-    #     print("GRAD: ",grad)
-    #     return grad
 
 
 def optimize_nst(content_weight, total_variation_weight, outputs_dict, shape_dict, nb_tensors, nb_style_images, combination_image):
@@ -715,12 +696,8 @@ def optimize_nst(content_weight, total_variation_weight, outputs_dict, shape_dic
     print("OPTIMIZING...")
 
     constraints = ({ 'type': 'eq', 'fun': lambda inputs: 1.0 - np.sum(inputs) })
-    res = m.basinhopping(nst, style_weights, niter = 5, minimizer_kwargs = {'method': 'SLSQP', 'args': (content_weight, total_variation_weight, outputs_dict, shape_dict, nb_tensors, nb_style_images, combination_image), 'bounds': bounds, 'constraints': constraints, 'options': {'ftol': 1e-06, 'eps': 0.1, 'disp': True}}) #, 'jac': evaluator.wgrads
+    res = m.basinhopping(nst, style_weights, niter = 2, minimizer_kwargs = {'method': 'SLSQP', 'args': (content_weight, total_variation_weight, outputs_dict, shape_dict, nb_tensors, nb_style_images, combination_image), 'bounds': bounds, 'constraints': constraints, 'options': {'ftol': 1e-06, 'eps': 0.1, 'disp': False}})
     # res = m.minimize(nst, style_weights, method = 'SLSQP', args = (content_weight, total_variation_weight, outputs_dict, shape_dict, nb_tensors, nb_style_images, combination_image), bounds = bounds, constraints = constraints, options={'ftol': 1e-06, 'eps': 0.2, 'disp': True})
-
-    #Try basinhop with slsqp
-    #Try without sum constraint
-    #
 
     print("Res: ", res)
     res_allocs = res.x
@@ -749,16 +726,10 @@ if __name__ == '__main__':
 
     """
     JOURNAL:
-    1. Dipping sun with the scream + wave_kanagawa - 0.5, 0.5
-    2. Golden Gate with misty mood + frida kahlo - 0.5, 0.5
+    1. Dipping sun with the scream + wave_kanagawa (max_func=20 for fmin_l_bfgs_b, n_iter=1 for basinhop) - 0.5, 0.5 (Results stored at - Results/slsqp/c)
+    2. Golden Gate with misty mood + frida kahlo (max_func=20 for fmin_l_bfgs_b, n_iter=1 for basinhop) - 0.5, 0.5 (Results stored at - Results/slsqp/b)
+    3. Dipping sun with the scream + wave_kanagawa (max_func=50 for fmin_l_bfgs_b, n_iter=5 for basinhop) - program terminated after 19th iteration - took 4 days (Results stored at - Results/slsqp/d)
 
-
-    Without gradient function, same style weights
-    With gradient function, errors!!!!
-
-
-    Break down into minute steps!
-
-        python -W ignore optimize_nst.py images/inputs/content/Dipping-Sun.jpg images/inputs/style/the_scream.jpg images/inputs/style/wave_kanagawa.jpg Results/basinhop/bh
-
+    Run command:
+    python -W ignore optimize_nst.py images/inputs/content/Dipping-Sun.jpg images/inputs/style/the_scream.jpg images/inputs/style/wave_kanagawa.jpg Results/basinhop/b
     """
